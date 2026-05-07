@@ -7,15 +7,18 @@
 - `react-admin`: Render Static Site
 
 The repo includes a root `render.yaml` for Blueprint-based setup.
+The repo also now includes a root `Dockerfile` so a single Render Docker service pointed at the repo root can still boot the Laravel backend.
 
 ## What changed from Railway
 
-- Removed `backend/nixpacks.toml` because it was specific to Railway/Nixpacks.
-- Added `backend/Dockerfile` so Laravel can run on Render.
+- Added `backend/Dockerfile` for Blueprint-style backend deploys.
+- Added a root `Dockerfile` for manual Render Docker services that build from the repo root.
 - Frontends now support `VITE_API_ORIGIN` instead of forcing a full `VITE_API_URL`.
 - Admin storefront links now use `VITE_STOREFRONT_URL` instead of hardcoded production domains.
 
 ## Deploy steps
+
+### Preferred: Render Blueprint
 
 1. Push this repo to GitHub/GitLab/Bitbucket.
 2. In Render, choose `New > Blueprint`.
@@ -33,6 +36,15 @@ The repo includes a root `render.yaml` for Blueprint-based setup.
    - `apos-backend`
    - `apos-storefront`
    - `apos-admin`
+
+### Alternative: single Docker web service
+
+If you already created a Docker Web Service from the repo root, Render will now find the root `Dockerfile` and boot the Laravel app without needing a `Root Directory` change.
+
+If you prefer to use the backend-specific Dockerfile instead, set:
+
+- `Root Directory`: `backend`
+- `Dockerfile Path`: `Dockerfile`
 
 ## Backend env notes
 
