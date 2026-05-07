@@ -2,15 +2,12 @@
 import { useOutletContext } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import { useMsg } from "../../components/MsgContext/MsgContext";
+import { API_ORIGIN } from "../../config/api";
 import {
   normalizeCustomerRankRules,
   resolveCustomerRankName,
   sanitizeRankPoints,
 } from "../../utils/customerRanks";
-
-const FILE_BASE = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace("/api/v1", "")
-  : "http://127.0.0.1:8000";
 
 const money = (v) =>
   Number(v || 0).toLocaleString("vi-VN", {
@@ -26,8 +23,8 @@ const toAbsoluteImageUrl = (value) => {
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
     return trimmed;
   }
-  if (trimmed.startsWith("/")) return `${FILE_BASE}${trimmed}`;
-  return `${FILE_BASE}/${trimmed}`;
+  if (trimmed.startsWith("/")) return `${API_ORIGIN}${trimmed}`;
+  return `${API_ORIGIN}/${trimmed}`;
 };
 
 const customerEmptyForm = {

@@ -4,19 +4,12 @@ import axiosClient from "../../api/axiosClient";
 import { can } from "../../auth/permission";
 import { refreshPermissions } from "../../auth/storage";
 import { PageLoader, Spinner } from "../../components/Loading/Loading";
-
-const FILE_BASE = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace("/api/v1", "")
-  : "http://127.0.0.1:8000";
-
-const TOP_PAGE_URL = import.meta.env.PROD
-  ? "https://web.hoanganmsc.online"
-  : "http://localhost:5174/";
+import { API_ORIGIN, STOREFRONT_URL } from "../../config/api";
 
 function toAbsUrl(v) {
   if (!v) return "";
   if (v.startsWith("http")) return v;
-  return `${FILE_BASE}${v.startsWith("/") ? "" : "/"}${v}`;
+  return `${API_ORIGIN}${v.startsWith("/") ? "" : "/"}${v}`;
 }
 
 export default function Profile() {
@@ -184,7 +177,7 @@ export default function Profile() {
       {/* ── Tài khoản ── */}
       <div className="profile-section-title">Tài khoản</div>
       <div className="profile-menu">
-        <a href={TOP_PAGE_URL} target="_blank" rel="noreferrer" className="profile-menu-item">
+        <a href={STOREFRONT_URL} target="_blank" rel="noreferrer" className="profile-menu-item">
           <span className="profile-menu-icon-wrap blue">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M14 5h5v5"/><path d="M10 14L19 5"/>

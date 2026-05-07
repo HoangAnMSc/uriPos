@@ -4,12 +4,10 @@ import axiosClient from "../../api/axiosClient";
 import { can } from "../../auth/permission";
 import { useAppSettings } from "../../context/AppSettingsContext";
 import { buildMobileNav, buildSidebarGroups } from "../../config/adminNavigation";
+import { STOREFRONT_URL } from "../../config/api";
 import "./Sidebar.css";
 
 const STORAGE_KEY = "admin-sidebar";
-const TOP_PAGE_URL = import.meta.env.PROD
-  ? "https://web.hoanganmsc.online"
-  : "http://localhost:5174/";
 
 const Icon = ({ name }) => {
   switch (name) {
@@ -320,7 +318,7 @@ export default function Sidebar() {
 
         <div className="sidebar__foot">
           <a
-            href={TOP_PAGE_URL}
+            href={STOREFRONT_URL}
             target="_blank"
             rel="noreferrer"
             className="sidebar__topBtn"

@@ -1,19 +1,16 @@
 import { createContext, useEffect, useState, useCallback } from "react";
 import api from "../api/axios";
+import { API_ORIGIN } from "../config/api";
 
 export const StoreContext = createContext(null);
-
-const API_BASE = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace("/api/v1", "")
-  : "http://127.0.0.1:8000";
 
 function toAbsoluteImageUrl(value) {
   if (!value || typeof value !== "string") return "";
   const v = value.trim();
   if (!v) return "";
   if (v.startsWith("http://") || v.startsWith("https://")) return v;
-  if (v.startsWith("/")) return `${API_BASE}${v}`;
-  return `${API_BASE}/${v}`;
+  if (v.startsWith("/")) return `${API_ORIGIN}${v}`;
+  return `${API_ORIGIN}/${v}`;
 }
 
 const StoreContextProvider = (props) => {

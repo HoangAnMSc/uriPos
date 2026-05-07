@@ -2,16 +2,13 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
 import { getPageMeta } from "../config/adminNavigation";
+import { API_ORIGIN } from "../config/api";
 import Sidebar from "./Sidebar/Sidebar";
-
-const FILE_BASE = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace("/api/v1", "")
-  : "http://127.0.0.1:8000";
 
 function toAbsUrl(value) {
   if (!value) return "";
   if (value.startsWith("http")) return value;
-  return `${FILE_BASE}${value.startsWith("/") ? "" : "/"}${value}`;
+  return `${API_ORIGIN}${value.startsWith("/") ? "" : "/"}${value}`;
 }
 
 function getInitial(name) {

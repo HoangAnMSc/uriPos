@@ -3,11 +3,10 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import { can } from "../../auth/permission";
+import { API_ORIGIN } from "../../config/api";
 import "./ProductList.css";
 
-const FILE_BASE = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace("/api/v1", "")
-  : "http://127.0.0.1:8000";
+const FILE_BASE = API_ORIGIN;
 
 const EMPTY_FORM = {
   sku: "",
