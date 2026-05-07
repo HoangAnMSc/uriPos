@@ -1,0 +1,130 @@
+.navbar {
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #f1f5f9;
+  margin: 0 -5%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.navbar .logo {
+  width: 130px;
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 6px;
+}
+
+.navbar-menu a {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #475569;
+  transition: color 0.2s, background 0.2s;
+  text-transform: capitalize;
+}
+
+.navbar-menu a:hover {
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.navbar-menu a.active {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-right img {
+  width: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.navbar-right img:hover { opacity: 1; }
+
+/* Cart icon */
+.navbar-basket-icon {
+  position: relative;
+}
+
+.navbar-basket-icon .dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #16a34a;
+  border-radius: 50%;
+  top: -3px;
+  right: -3px;
+  border: 2px solid #fff;
+}
+
+/* Buttons */
+.navbar button {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+
+.navbar button:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+/* Customer info */
+.navbar-customer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-customer-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.navbar-logout-btn {
+  background: transparent !important;
+  color: #ef4444 !important;
+  border: 1.5px solid #ef4444 !important;
+  padding: 7px 16px !important;
+  font-size: 13px !important;
+}
+
+.navbar-logout-btn:hover {
+  background: #fef2f2 !important;
+  transform: none !important;
+}
+
+@media (max-width: 900px) {
+  .navbar-menu { display: none; }
+  .navbar-customer-name { display: none; }
+}
+
+@media (max-width: 480px) {
+  .navbar .logo { width: 110px; }
+}

@@ -1,0 +1,258 @@
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: max-content;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--r-sm, 8px);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.74)),
+    var(--surface-raised, rgba(255,255,255,0.85));
+  color: var(--text-1, #1d1d1f);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.04));
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  transition:
+    background  120ms ease,
+    border-color 120ms ease,
+    box-shadow  120ms ease,
+    transform   120ms ease,
+    opacity     120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:hover:not(:disabled) {
+  background: rgba(255,255,255,0.92);
+  border-color: rgba(255,255,255,0.78);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.06));
+}
+
+button:active:not(:disabled) { transform: scale(0.97); }
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Add / Primary green ────────────────────────────── */
+button.add,
+button.btn_add,
+button.btn_success,
+button.btn-primary,
+button.dcBtn,
+button.psBtn,
+button.nm-submit-btn,
+button.plPrimaryBtn,
+button.pay-btn {
+  background: var(--accent, #16a34a);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+button.add:hover:not(:disabled),
+button.btn_add:hover:not(:disabled),
+button.btn_success:hover:not(:disabled),
+button.btn-primary:hover:not(:disabled),
+button.dcBtn:hover:not(:disabled),
+button.psBtn:hover:not(:disabled),
+button.nm-submit-btn:hover:not(:disabled),
+button.plPrimaryBtn:hover:not(:disabled),
+button.pay-btn:hover:not(:disabled) {
+  background: var(--accent-dark, #15803d);
+  border-color: transparent;
+  box-shadow: 0 3px 10px var(--accent-ring, rgba(22,163,74,0.30));
+}
+
+/* ── Edit / Blue ────────────────────────────────────── */
+button.edit,
+button.btn_edit {
+  background: var(--info-bg, rgba(0,122,255,0.08));
+  color: var(--info, #007aff);
+  border-color: rgba(0,122,255,0.20);
+  box-shadow: none;
+}
+button.edit:hover:not(:disabled),
+button.btn_edit:hover:not(:disabled) {
+  background: rgba(0,122,255,0.14);
+  border-color: rgba(0,122,255,0.30);
+  box-shadow: none;
+}
+
+/* ── Success / Green light ──────────────────────────── */
+button.success,
+button.btn-success {
+  background: var(--success, #34c759);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+button.success:hover:not(:disabled),
+button.btn-success:hover:not(:disabled) {
+  background: #2db350;
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(52,199,89,0.30);
+}
+
+/* ── Warning / Orange ───────────────────────────────── */
+button.warning,
+button.btn_warning {
+  background: var(--warning-bg, rgba(255,159,10,0.08));
+  color: var(--warning, #ff9f0a);
+  border-color: rgba(255,159,10,0.22);
+  box-shadow: none;
+}
+button.warning:hover:not(:disabled),
+button.btn_warning:hover:not(:disabled) {
+  background: rgba(255,159,10,0.14);
+  border-color: rgba(255,159,10,0.32);
+  box-shadow: none;
+}
+
+/* ── Danger / Red ───────────────────────────────────── */
+button.danger,
+button.btn_delete,
+button.btn-danger {
+  background: var(--danger-bg, rgba(255,59,48,0.08));
+  color: var(--danger, #ff3b30);
+  border-color: rgba(255,59,48,0.20);
+  box-shadow: none;
+}
+button.danger:hover:not(:disabled),
+button.btn_delete:hover:not(:disabled),
+button.btn-danger:hover:not(:disabled) {
+  background: rgba(255,59,48,0.14);
+  border-color: rgba(255,59,48,0.30);
+  box-shadow: none;
+}
+
+/* ── Ghost / Transparent ────────────────────────────── */
+button.ghost,
+button.btn-ghost,
+button.btn-secondary {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-2, #424245);
+}
+button.ghost:hover:not(:disabled),
+button.btn-ghost:hover:not(:disabled),
+button.btn-secondary:hover:not(:disabled) {
+  background: rgba(0,0,0,0.05);
+  border-color: var(--border, rgba(0,0,0,0.08));
+  box-shadow: none;
+}
+
+/* ── Sizes ──────────────────────────────────────────── */
+button.sm,
+button.btn-sm,
+button.dcBtnSmall,
+button.nm-action-btn {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: 7px;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+button.lg { height: 44px; padding: 0 22px; font-size: 15px; border-radius: var(--r-md, 12px); }
+button.xl { height: 52px; padding: 0 28px; font-size: 16px; border-radius: var(--r-lg, 16px); }
+
+/* ── Full width ─────────────────────────────────────── */
+button.block { width: 100%; }
+
+/* ── dcBtnSmall danger modifier ─────────────────────── */
+button.dcBtnSmall.dcDanger,
+button.nm-action-btn.danger {
+  color: var(--danger, #ff3b30);
+  border-color: rgba(255,59,48,0.20);
+  background: var(--danger-bg, rgba(255,59,48,0.06));
+}
+button.dcBtnSmall.dcDanger:hover:not(:disabled),
+button.nm-action-btn.danger:hover:not(:disabled) {
+  background: rgba(255,59,48,0.12);
+}
+
+/* ── pay-btn full width override ────────────────────── */
+button.pay-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: var(--r-lg, 16px);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 8px var(--accent-ring, rgba(22,163,74,0.25));
+}
+button.pay-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 16px var(--accent-ring, rgba(22,163,74,0.35));
+}
+button.pay-btn:active:not(:disabled) { transform: scale(0.98); }
+
+/* ── plCardOverlayBtn ───────────────────────────────── */
+button.plCardOverlayBtn {
+  height: 32px;
+  padding: 0 12px;
+  background: rgba(255,255,255,0.88);
+  color: var(--text-1, #1d1d1f);
+  border: 1px solid rgba(255,255,255,0.7);
+  font-size: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: none;
+}
+button.plCardOverlayBtn:hover { background: #fff; border-color: rgba(255,255,255,0.9); }
+button.plCardOverlayBtn.isDanger { color: var(--danger, #ff3b30); }
+button.plCardOverlayBtn.isDanger:hover { background: var(--danger-bg, rgba(255,59,48,0.10)); }
+
+/* ── nm-likers-btn (inline text) ────────────────────── */
+button.nm-likers-btn {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--info, #007aff);
+  font-size: inherit;
+  font-weight: 500;
+  box-shadow: none;
+}
+button.nm-likers-btn:hover { opacity: 0.75; background: transparent; border-color: transparent; }
+
+/* ── cart-note-btn (POS inline) ─────────────────────── */
+button.cart-note-btn {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--info, #007aff);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: none;
+}
+button.cart-note-btn:hover { background: transparent; border-color: transparent; opacity: 0.75; }
+
+/* ── Mobile touch targets ───────────────────────────── */
+@media (max-width: 768px) {
+  button { -webkit-tap-highlight-color: transparent; }
+  button.sm,
+  button.btn-sm,
+  button.dcBtnSmall,
+  button.nm-action-btn {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  button.pay-btn { height: 52px; font-size: 17px; }
+  button.lg { height: 44px; padding: 0 20px; font-size: 15px; }
+}

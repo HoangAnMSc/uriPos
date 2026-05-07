@@ -1,0 +1,112 @@
+/* ─────────────────────────────────────────────────────
+   shortcus.css  —  Keyboard shortcut labels + misc utils
+   ───────────────────────────────────────────────────── */
+
+.card-shortcut {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.shortcut-label,
+.shortcut-label-2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 5px;
+  background: var(--surface-2, #f5f5f7);
+  border: 1px solid var(--border, rgba(0,0,0,0.08));
+  color: var(--text-3, #6e6e73);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  font-family: var(--font-mono, "SF Mono", monospace);
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.shortcut-label {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.shortcut-label-2 {
+  position: absolute;
+  right: -2vw;
+}
+
+/* ── Loading spinner ────────────────────────────────── */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+.spinner-sm { width: 14px; height: 14px; }
+.spinner-lg { width: 32px; height: 32px; border-width: 3px; }
+
+/* ── Skeleton ───────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--r-sm, 8px);
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ── Divider ────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--divider, rgba(0,0,0,0.06));
+  margin: 16px 0;
+}
+
+/* ── Tag / chip ─────────────────────────────────────── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-full, 9999px);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+
+/* ── Tooltip ────────────────────────────────────────── */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-1);
+  color: var(--text-inv, #fff);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: var(--r-sm, 8px);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast, 120ms);
+  z-index: var(--z-toast, 900);
+}
+[data-tooltip]:hover::after { opacity: 1; }
+
+@media (max-width: 768px) {
+  .shortcut-label,
+  .shortcut-label-2 { display: none; }
+}

@@ -1,0 +1,340 @@
+/* ─────────────────────────────────────────────────────
+   table.css  —  Cards, tables, page layout, toolbars
+   Covers: card, card-table, card-list, ul-*, sip*, cs*,
+           page-header, toolbar, pagination
+   ───────────────────────────────────────────────────── */
+
+/* ── Card ───────────────────────────────────────────── */
+.card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72)),
+    var(--surface-raised, rgba(255,255,255,0.85));
+  border: 1px solid var(--shell-border, rgba(255,255,255,0.58));
+  border-radius: var(--r-xl, 20px);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,0.08));
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--divider, rgba(0,0,0,0.06));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-header h2,
+.card-header h3 { margin: 0; }
+
+.card-body { padding: 20px; }
+.card-body--flush { padding: 0; }
+
+.card-table {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.76)),
+    var(--surface-raised, rgba(255,255,255,0.85));
+  border: 1px solid var(--shell-border, rgba(255,255,255,0.58));
+  border-radius: var(--r-xl, 20px);
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,0.08));
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  overflow: hidden;
+  width: 100%;
+}
+
+.card-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.card-table thead tr {
+  border-bottom: 1px solid var(--divider, rgba(0,0,0,0.06));
+}
+
+.card-table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-3, #6e6e73);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: rgba(255,255,255,0.52);
+}
+
+.card-table td {
+  padding: 12px 16px;
+  color: var(--text-1, #1d1d1f);
+  border-bottom: 1px solid var(--divider, rgba(0,0,0,0.05));
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.card-table tbody tr:last-child td { border-bottom: none; }
+
+.card-table tbody tr {
+  transition: background var(--dur-fast, 120ms);
+}
+.card-table tbody tr:hover { background: rgba(255,255,255,0.42); }
+
+.card-list {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72)),
+    var(--surface-raised, rgba(255,255,255,0.85));
+  border: 1px solid var(--shell-border, rgba(255,255,255,0.58));
+  border-radius: var(--r-xl, 20px);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  overflow: hidden;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: var(--text-2xl, 24px);
+  font-weight: 700;
+  color: var(--text-1, #1d1d1f);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+/* ── Toolbar ────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.ul-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.ul-title {
+  font-size: var(--text-xl, 20px);
+  font-weight: 700;
+  color: var(--text-1, #1d1d1f);
+  letter-spacing: -0.2px;
+  margin: 0;
+}
+
+.ul-select {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--r-sm, 8px);
+  background: rgba(255,255,255,0.62);
+  color: var(--text-1, #1d1d1f);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--dur-fast, 120ms);
+}
+.ul-select:focus { border-color: var(--accent, #16a34a); }
+
+.ul-saving {
+  font-size: 12px;
+  color: var(--text-3, #6e6e73);
+  font-style: italic;
+}
+
+.ul-ok {
+  font-size: 12px;
+  color: var(--success, #34c759);
+  font-weight: 600;
+}
+
+.ul-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ul-status.online {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.ul-status.offline {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.ul-td {
+  text-align: center;
+  color: var(--text-3, #6e6e73);
+  font-size: 13px;
+  padding: 32px 16px !important;
+}
+
+/* ── Dashboard (sip-*) ──────────────────────────────── */
+
+.sipHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.sipRefreshBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border, rgba(0,0,0,0.10));
+  border-radius: var(--r-sm, 8px);
+  background: var(--surface, #fff);
+  color: var(--text-2, #424245);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-fast, 120ms), box-shadow var(--dur-fast, 120ms);
+}
+.sipRefreshBtn:hover {
+  background: var(--surface-2, #f5f5f7);
+  box-shadow: var(--shadow-sm);
+}
+
+.sipViewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--info, #007aff);
+  border-radius: var(--r-sm, 8px);
+  background: var(--info-bg, rgba(0,122,255,0.08));
+  color: var(--info, #007aff);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--dur-fast, 120ms);
+}
+.sipViewBtn:hover { background: rgba(0,122,255,0.14); }
+
+.sipItemsBlock {
+  margin-top: 20px;
+}
+.sipItemsBlock h3 {
+  margin-bottom: 12px;
+  font-size: var(--text-lg, 17px);
+  font-weight: 600;
+  color: var(--text-1, #1d1d1f);
+}
+
+/* ── Table actions ──────────────────────────────────── */
+.tbl-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Thumbnail ──────────────────────────────────────── */
+.tbl-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm, 8px);
+  object-fit: cover;
+  border: 1px solid var(--border, rgba(0,0,0,0.08));
+  background: var(--surface-2, #fafafa);
+  display: block;
+}
+
+/* ── Empty state ────────────────────────────────────── */
+.tbl-empty {
+  padding: 56px 20px;
+  text-align: center;
+  color: var(--text-3, #6e6e73);
+}
+.tbl-empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.35; }
+.tbl-empty-text { font-size: 15px; font-weight: 500; }
+.tbl-empty-sub  { font-size: 13px; margin-top: 4px; color: var(--text-4, #aeaeb2); }
+
+/* ── Pagination ─────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 16px 0 4px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(255,255,255,0.58);
+  border-radius: var(--r-sm, 8px);
+  background: rgba(255,255,255,0.64);
+  color: var(--text-2, #424245);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--dur-fast, 120ms);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.82);
+  border-color: rgba(255,255,255,0.72);
+}
+.pagination-btn.is-active {
+  background: var(--accent, #16a34a);
+  color: #fff;
+  border-color: var(--accent, #16a34a);
+}
+.pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .card-table {
+    border-radius: var(--r-lg, 16px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .card-table table { min-width: 480px; }
+  .card-table th { padding: 11px 14px; font-size: 12px; }
+  .card-table td { padding: 12px 14px; font-size: 14px; }
+  .ul-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .ul-title { font-size: 20px; }
+  .page-header { margin-bottom: 16px; }
+  .page-title { font-size: 22px; }
+  .toolbar { gap: 8px; }
+  .pagination { justify-content: center; padding: 12px 0 2px; }
+  .pagination-btn { min-width: 36px; height: 36px; font-size: 14px; }
+  .tbl-thumb { width: 40px; height: 40px; }
+}
+@media (max-width: 480px) {
+  .card-table th { padding: 10px 12px; }
+  .card-table td { padding: 11px 12px; font-size: 13.5px; }
+}

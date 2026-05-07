@@ -1,0 +1,124 @@
+.customer-auth-popup {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: grid;
+  place-items: center;
+  top: 0;
+  left: 0;
+}
+
+.customer-auth-container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.customer-auth-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.customer-auth-title h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.customer-auth-title img {
+  width: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.customer-auth-title img:hover {
+  transform: rotate(90deg);
+}
+
+.customer-auth-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.customer-auth-inputs input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.customer-auth-inputs input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.customer-auth-error {
+  color: var(--color-error);
+  font-size: 13px;
+  margin: -10px 0 15px 0;
+  text-align: center;
+}
+
+.customer-auth-container button {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-bottom: 15px;
+}
+
+.customer-auth-container button:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.customer-auth-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.customer-auth-container p {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.customer-auth-container p span {
+  color: var(--color-primary);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.customer-auth-container p span:hover {
+  color: var(--color-primary-dark);
+}

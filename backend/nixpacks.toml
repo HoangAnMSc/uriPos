@@ -1,0 +1,14 @@
+[phases.build]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[phases.release]
+cmds = [
+  "php artisan migrate --force",
+  "php artisan db:seed --force"
+]
+
+[start]
+cmd = "php artisan serve --host 0.0.0.0 --port $PORT"
+
+[variables]
+PHP_EXTENSIONS = "pdo_mysql,mbstring,openssl,tokenizer,xml,ctype,json,bcmath,gd"
