@@ -1,6 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
+import { ErrorState, SkeletonLine } from "../components/Loading/Loading";
+import useApiResource from "../hooks/useApiResource";
 
 /* ── helpers ─────────────────────────────────────────── */
 const fmt = (n) => Number(n || 0).toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -33,6 +35,14 @@ function normalizeOrder(row) {
     paymentMethod: row?.payment_method || "cash",
     items: Array.isArray(row?.items) ? row.items : [],
   };
+}
+
+function getApiRows(response, fallbackKey) {
+  if (Array.isArray(response?.data)) return response.data;
+  if (Array.isArray(response?.data?.data)) return response.data.data;
+  if (Array.isArray(response?.data?.[fallbackKey])) return response.data[fallbackKey];
+  if (Array.isArray(response?.data?.data?.[fallbackKey])) return response.data.data[fallbackKey];
+  return [];
 }
 
 /* ── Area Chart ──────────────────────────────────────── */
@@ -146,7 +156,6 @@ function GaugeChart({ pct = 68, color = "#16a34a", size = 160 }) {
     return `M${s.x},${s.y} A${radius},${radius} 0 ${large} 1 ${e.x},${e.y}`;
   };
 
-  const fillAngle = startAngle + (pct / 100) * totalAngle;
   const strokeW = 12;
 
   return (
@@ -183,32 +192,26 @@ function Delta({ value }) {
 
 /* ── Main ────────────────────────────────────────────── */
 export default function Dashboard() {
-  const [orders, setOrders]   = useState([]);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [period, setPeriod]   = useState("30");
 
-  useEffect(() => {
-    let ignore = false;
-    Promise.all([
-      axiosClient.get("/orders").catch(() => ({ data: [] })),
-      axiosClient.get("/products").catch(() => ({ data: [] })),
-    ]).then(([oR, pR]) => {
-      if (ignore) return;
-      const rawO = Array.isArray(oR?.data) ? oR.data
-        : Array.isArray(oR?.data?.data) ? oR.data.data
-        : Array.isArray(oR?.data?.orders) ? oR.data.orders : [];
-      setOrders(rawO.map(normalizeOrder));
+  const loadDashboard = useCallback(async () => {
+    const ordersResponse = await axiosClient.get("/orders");
 
-      const rawP = Array.isArray(pR?.data) ? pR.data
-        : Array.isArray(pR?.data?.data) ? pR.data.data
-        : pR?.data?.data?.products || [];
-      setProducts(rawP);
-      setLoading(false);
-    });
-    return () => { ignore = true; };
+    return {
+      orders: getApiRows(ordersResponse, "orders").map(normalizeOrder),
+    };
   }, []);
 
+  const {
+    data: dashboard,
+    loading,
+    error,
+    reload,
+  } = useApiResource(loadDashboard, {
+    initialData: { orders: [] },
+  });
+
+  const { orders } = dashboard;
   const days = Number(period);
 
   const stats = useMemo(() => {
@@ -291,11 +294,19 @@ export default function Dashboard() {
     return (
       <div className="db-page">
         <div className="db-skeleton-grid">
-          {[...Array(4)].map((_,i) => <div key={i} className="ld-skeleton-line" style={{height:88,borderRadius:16}} />)}
+          {[...Array(4)].map((_,i) => <SkeletonLine key={i} height={88} radius={16} />)}
         </div>
         <div className="db-skeleton-grid" style={{marginTop:14}}>
-          {[...Array(2)].map((_,i) => <div key={i} className="ld-skeleton-line" style={{height:240,borderRadius:20}} />)}
+          {[...Array(2)].map((_,i) => <SkeletonLine key={i} height={240} radius={20} />)}
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="db-page">
+        <ErrorState message={error} onRetry={reload} />
       </div>
     );
   }

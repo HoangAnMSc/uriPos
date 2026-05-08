@@ -1,4 +1,5 @@
 const AUTH_TOKEN_EVENT = "auth-token-changed";
+const ADMIN_USER_ID_KEY = "adminUserId";
 
 const emitTokenChange = () => {
   if (typeof window === "undefined") return;
@@ -15,6 +16,7 @@ export const setToken = (token) => {
     localStorage.setItem("token", token);
   } else {
     localStorage.removeItem("token");
+    localStorage.removeItem(ADMIN_USER_ID_KEY);
   }
 
   emitTokenChange();
@@ -22,6 +24,7 @@ export const setToken = (token) => {
 export const getToken = () => localStorage.getItem("token") || "";
 export const clearToken = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem(ADMIN_USER_ID_KEY);
   emitTokenChange();
 };
 
@@ -55,6 +58,7 @@ export const clearAuth = () => {
   clearToken();
   clearPermissions();
   clearRoles();
+  localStorage.removeItem(ADMIN_USER_ID_KEY);
 };
 
 // Refresh permissions from server

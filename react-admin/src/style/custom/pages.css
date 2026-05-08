@@ -231,6 +231,39 @@
   font-size: 14px;
 }
 
+.ld-error-state {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-3, #6e6e73);
+}
+
+.ld-error-title {
+  color: var(--text-2, #3a3a3c);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ld-error-action {
+  border: 0;
+  border-radius: var(--r-sm, 10px);
+  padding: 9px 14px;
+  background: var(--accent, #16a34a);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ld-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 
 /* ══════════════════════════════════════════════════════
    DASHBOARD (db*)

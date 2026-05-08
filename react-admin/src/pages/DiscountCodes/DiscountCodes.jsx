@@ -1,144 +1,135 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { InlineLoader } from "../../components/Loading/Loading";
+import React, { useCallback, useMemo, useState } from "react";
 import axiosClient from "../../api/axiosClient";
+import { ButtonContent, InlineLoader } from "../../components/Loading/Loading";
+import useApiResource, { getApiErrorMessage } from "../../hooks/useApiResource";
 
-async function apiFetch(path, options = {}) {
-  const method = (options.method || "GET").toLowerCase();
-  const body = options.body ? JSON.parse(options.body) : undefined;
-  const res = await axiosClient[method](path, body);
-  return res.data;
-}
+const EMPTY_CREATE = {
+  code: "",
+  type: "percent",
+  value: "",
+  minSubtotal: "0",
+  maxDiscount: "",
+  active: true,
+};
 
-function money(n) {
-  const v = Number(n || 0);
-  return v.toLocaleString("vi-VN", {
+function money(value) {
+  return Number(value || 0).toLocaleString("vi-VN", {
     style: "currency",
     currency: "VND",
   });
 }
 
+function getRows(response) {
+  if (Array.isArray(response?.data)) return response.data;
+  if (Array.isArray(response?.data?.data)) return response.data.data;
+  return [];
+}
+
+function normalizeDiscount(row) {
+  const maxDiscount = row?.maxDiscount ?? row?.max_discount;
+
+  return {
+    id: row?.id,
+    code: row?.code || "",
+    type: row?.type || "percent",
+    value: Number(row?.value || 0),
+    minSubtotal: Number(row?.minSubtotal ?? row?.min_subtotal ?? 0),
+    maxDiscount: maxDiscount == null ? null : Number(maxDiscount),
+    active: Boolean(row?.active),
+  };
+}
+
+function toDiscountPayload(form) {
+  return {
+    code: form.code.trim().toUpperCase(),
+    type: form.type,
+    value: Number(form.value || 0),
+    minSubtotal: Number(form.minSubtotal || 0),
+    maxDiscount: form.maxDiscount === "" ? null : Number(form.maxDiscount || 0),
+    active: Boolean(form.active),
+  };
+}
+
 export default function DiscountCodes() {
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState("");
+  const [create, setCreate] = useState(EMPTY_CREATE);
+  const [creating, setCreating] = useState(false);
+  const [busyId, setBusyId] = useState(null);
 
-  const [items, setItems] = useState([]);
-
-  const [create, setCreate] = useState({
-    code: "",
-    type: "percent",
-    value: "",
-    minSubtotal: "0",
-    maxDiscount: "",
-    active: true,
-  });
-
-  async function loadAll() {
-    setLoading(true);
-    setErr("");
-    try {
-      const res = await apiFetch("/discounts");
-      const norm = (res || []).map((d) => ({
-        id: d.id,
-        code: d.code,
-        type: d.type,
-        value: Number(d.value || 0),
-        minSubtotal: Number(d.minSubtotal ?? d.min_subtotal ?? 0),
-        maxDiscount:
-          d.maxDiscount === null || d.max_discount === null
-            ? null
-            : Number(d.maxDiscount ?? d.max_discount),
-        active: Boolean(d.active),
-      }));
-      setItems(norm);
-    } catch (e) {
-      setErr(e.message || "Load failed");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadAll();
+  const loadDiscounts = useCallback(async () => {
+    const response = await axiosClient.get("/discounts");
+    return getRows(response).map(normalizeDiscount);
   }, []);
 
+  const {
+    data: items,
+    loading,
+    error,
+    setError,
+    reload,
+  } = useApiResource(loadDiscounts, { initialData: [] });
+
   const preview = useMemo(() => {
-    const code = create.code.trim().toUpperCase() || "NEWCODE";
-    const type = create.type;
-    const value = Number(create.value || 0);
-    const minSubtotal = Number(create.minSubtotal || 0);
-    const maxDiscount =
-      create.maxDiscount === "" ? null : Number(create.maxDiscount || 0);
+    const payload = toDiscountPayload(create);
+
     return {
-      code,
-      type,
-      value,
-      minSubtotal,
-      maxDiscount,
-      active: create.active,
+      ...payload,
+      code: payload.code || "NEWCODE",
     };
   }, [create]);
 
   async function createDiscount() {
+    const payload = toDiscountPayload(create);
+
+    if (!payload.code) {
+      setError("Code is required");
+      return;
+    }
+
     try {
-      setErr("");
-      const payload = {
-        code: create.code.trim().toUpperCase(),
-        type: create.type,
-        value: Number(create.value || 0),
-        minSubtotal: Number(create.minSubtotal || 0),
-        maxDiscount:
-          create.maxDiscount === "" ? null : Number(create.maxDiscount || 0),
-        active: Boolean(create.active),
-      };
-      if (!payload.code) {
-        setErr("Code is required");
-        return;
-      }
-      await apiFetch("/discounts", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      setCreate({
-        code: "",
-        type: "percent",
-        value: "",
-        minSubtotal: "0",
-        maxDiscount: "",
-        active: true,
-      });
-      await loadAll();
-    } catch (e) {
-      setErr(e.message || "Create failed");
+      setCreating(true);
+      setError("");
+      await axiosClient.post("/discounts", payload);
+      setCreate(EMPTY_CREATE);
+      await reload();
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Create failed"));
+    } finally {
+      setCreating(false);
     }
   }
 
   async function patchDiscount(id, patch) {
     try {
-      setErr("");
-      await apiFetch(`/discounts/${id}`, {
-        method: "PATCH",
-        body: JSON.stringify(patch),
-      });
-      await loadAll();
-    } catch (e) {
-      setErr(e.message || "Update failed");
+      setBusyId(id);
+      setError("");
+      await axiosClient.patch(`/discounts/${id}`, patch);
+      await reload();
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Update failed"));
+    } finally {
+      setBusyId(null);
     }
   }
 
   async function deleteDiscount(id) {
     try {
-      setErr("");
-      await apiFetch(`/discounts/${id}`, { method: "DELETE" });
-      await loadAll();
-    } catch (e) {
-      setErr(e.message || "Delete failed");
+      setBusyId(id);
+      setError("");
+      await axiosClient.delete(`/discounts/${id}`);
+      await reload();
+    } catch (err) {
+      setError(getApiErrorMessage(err, "Delete failed"));
+    } finally {
+      setBusyId(null);
     }
   }
 
-  if (loading) {
+  if (loading && items.length === 0) {
     return (
       <div className="dcWrap">
-        <div className="dcCard"><InlineLoader /></div>
+        <div className="dcCard">
+          <InlineLoader />
+        </div>
       </div>
     );
   }
@@ -152,7 +143,7 @@ export default function DiscountCodes() {
               <div className="dcTitle">Create discount code</div>
             </div>
 
-            {err ? <div className="dcError">{err}</div> : null}
+            {error ? <div className="dcError">{error}</div> : null}
 
             <div className="dcForm">
               <div className="dcPreview">
@@ -163,15 +154,15 @@ export default function DiscountCodes() {
                     {preview.type === "percent"
                       ? `${preview.value}%`
                       : money(preview.value)}
-                    <span className="dcDot">•</span>
+                    <span className="dcDot">-</span>
                     min {money(preview.minSubtotal)}
                     {preview.maxDiscount != null ? (
                       <>
-                        <span className="dcDot">•</span>
+                        <span className="dcDot">-</span>
                         cap {money(preview.maxDiscount)}
                       </>
                     ) : null}
-                    <span className="dcDot">•</span>
+                    <span className="dcDot">-</span>
                     {preview.active ? "active" : "inactive"}
                   </div>
                 </div>
@@ -184,7 +175,7 @@ export default function DiscountCodes() {
                     className="dcInput"
                     value={create.code}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, code: e.target.value }))
+                      setCreate((current) => ({ ...current, code: e.target.value }))
                     }
                     placeholder="SAVE10"
                   />
@@ -195,7 +186,7 @@ export default function DiscountCodes() {
                     className="dcSelect"
                     value={create.type}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, type: e.target.value }))
+                      setCreate((current) => ({ ...current, type: e.target.value }))
                     }
                   >
                     <option value="percent">percent</option>
@@ -212,7 +203,7 @@ export default function DiscountCodes() {
                     type="number"
                     value={create.value}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, value: e.target.value }))
+                      setCreate((current) => ({ ...current, value: e.target.value }))
                     }
                   />
                 </div>
@@ -223,7 +214,10 @@ export default function DiscountCodes() {
                     type="number"
                     value={create.minSubtotal}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, minSubtotal: e.target.value }))
+                      setCreate((current) => ({
+                        ...current,
+                        minSubtotal: e.target.value,
+                      }))
                     }
                   />
                 </div>
@@ -237,7 +231,10 @@ export default function DiscountCodes() {
                     type="number"
                     value={create.maxDiscount}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, maxDiscount: e.target.value }))
+                      setCreate((current) => ({
+                        ...current,
+                        maxDiscount: e.target.value,
+                      }))
                     }
                     placeholder="leave blank for no cap"
                   />
@@ -248,15 +245,25 @@ export default function DiscountCodes() {
                     type="checkbox"
                     checked={create.active}
                     onChange={(e) =>
-                      setCreate((s) => ({ ...s, active: e.target.checked }))
+                      setCreate((current) => ({
+                        ...current,
+                        active: e.target.checked,
+                      }))
                     }
                   />
                   Active
                 </label>
               </div>
 
-              <button className="dcBtn" type="button" onClick={createDiscount}>
-                Create
+              <button
+                className="dcBtn"
+                type="button"
+                onClick={createDiscount}
+                disabled={creating}
+              >
+                <ButtonContent loading={creating} loadingText="Creating...">
+                  Create
+                </ButtonContent>
               </button>
             </div>
           </div>
@@ -268,18 +275,20 @@ export default function DiscountCodes() {
             </div>
 
             <div className="dcList">
-              {items.map((d) => (
-                <div className="dcItem" key={d.id}>
+              {items.map((discount) => (
+                <div className="dcItem" key={discount.id}>
                   <div className="dcItemMain">
-                    <div className="dcCode">{d.code}</div>
+                    <div className="dcCode">{discount.code}</div>
                     <div className="dcMeta">
-                      {d.type === "percent" ? `${d.value}%` : money(d.value)}
-                      <span className="dcDot">•</span>
-                      min {money(d.minSubtotal)}
-                      {d.maxDiscount != null ? (
+                      {discount.type === "percent"
+                        ? `${discount.value}%`
+                        : money(discount.value)}
+                      <span className="dcDot">-</span>
+                      min {money(discount.minSubtotal)}
+                      {discount.maxDiscount != null ? (
                         <>
-                          <span className="dcDot">•</span>
-                          cap {money(d.maxDiscount)}
+                          <span className="dcDot">-</span>
+                          cap {money(discount.maxDiscount)}
                         </>
                       ) : null}
                     </div>
@@ -289,17 +298,21 @@ export default function DiscountCodes() {
                     <button
                       className="dcBtnSmall"
                       type="button"
+                      disabled={busyId === discount.id}
                       onClick={() =>
-                        patchDiscount(d.id, { active: d.active ? 0 : 1 })
+                        patchDiscount(discount.id, {
+                          active: !discount.active,
+                        })
                       }
                     >
-                      {d.active ? "Disable" : "Enable"}
+                      {discount.active ? "Disable" : "Enable"}
                     </button>
 
                     <button
                       className="dcBtnSmall dcDanger"
                       type="button"
-                      onClick={() => deleteDiscount(d.id)}
+                      disabled={busyId === discount.id}
+                      onClick={() => deleteDiscount(discount.id)}
                     >
                       Delete
                     </button>

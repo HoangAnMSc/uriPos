@@ -1,6 +1,5 @@
-// Loading components
+const TABLE_WIDTHS = ["42%", "72%", "58%", "66%", "50%", "80%"];
 
-// ── Spinner nhỏ dùng trong button ──
 export function Spinner({ size = 16, color = "currentColor" }) {
   return (
     <svg
@@ -18,17 +17,15 @@ export function Spinner({ size = 16, color = "currentColor" }) {
   );
 }
 
-// ── Skeleton dòng text ──
-export function SkeletonLine({ width = "100%", height = 12 }) {
+export function SkeletonLine({ width = "100%", height = 12, radius }) {
   return (
     <div
       className="ld-skeleton-line"
-      style={{ width, height, borderRadius: height / 2 }}
+      style={{ width, height, borderRadius: radius ?? height / 2 }}
     />
   );
 }
 
-// ── Skeleton row cho table ──
 export function SkeletonTableRows({ rows = 5, cols = 5 }) {
   return (
     <>
@@ -36,7 +33,13 @@ export function SkeletonTableRows({ rows = 5, cols = 5 }) {
         <tr key={i} className="ld-skeleton-row">
           {[...Array(cols)].map((_, j) => (
             <td key={j}>
-              <div className="ld-skeleton-line" style={{ width: j === 0 ? "40px" : `${60 + Math.random() * 30}%`, height: 12 }} />
+              <div
+                className="ld-skeleton-line"
+                style={{
+                  width: j === 0 ? "40px" : TABLE_WIDTHS[(i + j) % TABLE_WIDTHS.length],
+                  height: 12,
+                }}
+              />
             </td>
           ))}
         </tr>
@@ -45,7 +48,6 @@ export function SkeletonTableRows({ rows = 5, cols = 5 }) {
   );
 }
 
-// ── Skeleton card grid ──
 export function SkeletonCards({ count = 6, aspectRatio = "4/3" }) {
   return (
     <>
@@ -63,7 +65,6 @@ export function SkeletonCards({ count = 6, aspectRatio = "4/3" }) {
   );
 }
 
-// ── Skeleton list rows (dùng cho UserList, RoleList...) ──
 export function SkeletonListRows({ rows = 5 }) {
   return (
     <div className="ld-skeleton-list">
@@ -81,24 +82,56 @@ export function SkeletonListRows({ rows = 5 }) {
   );
 }
 
-// ── Full page loading overlay ──
-export function PageLoader() {
+export function PageLoader({ text = "Dang tai..." }) {
   return (
     <div className="ld-page-loader">
       <div className="ld-page-loader-inner">
         <div className="ld-pulse" />
-        <span>Đang tải...</span>
+        <span>{text}</span>
       </div>
     </div>
   );
 }
 
-// ── Inline loading (thay thế text "Loading...") ──
-export function InlineLoader({ text = "Đang tải..." }) {
+export function InlineLoader({ text = "Dang tai..." }) {
   return (
     <div className="ld-inline">
       <Spinner size={18} />
       <span>{text}</span>
     </div>
+  );
+}
+
+export function ErrorState({ message, onRetry, retryLabel = "Thu lai" }) {
+  function handleRetry() {
+    Promise.resolve(onRetry?.()).catch(() => {});
+  }
+
+  return (
+    <div className="ld-error-state">
+      <div className="ld-error-title">{message || "Co loi xay ra."}</div>
+      {onRetry ? (
+        <button className="ld-error-action" type="button" onClick={handleRetry}>
+          {retryLabel}
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
+export function AsyncState({ loading, error, onRetry, loadingText, children }) {
+  if (loading) return <InlineLoader text={loadingText} />;
+  if (error) return <ErrorState message={error} onRetry={onRetry} />;
+  return children;
+}
+
+export function ButtonContent({ loading, loadingText = "Dang xu ly...", children }) {
+  if (!loading) return children;
+
+  return (
+    <span className="ld-button-content">
+      <Spinner size={14} />
+      <span>{loadingText}</span>
+    </span>
   );
 }

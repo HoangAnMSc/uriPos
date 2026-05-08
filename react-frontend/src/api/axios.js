@@ -1,20 +1,9 @@
-import axios from "axios";
-import { API_BASE_URL } from "../config/api";
+import { createClient } from "@supabase/supabase-js";
+import { createStorefrontApi } from "../../../backend/supabase/storefrontApi";
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("customerToken") || "";
-  if (token) {
-    config.headers.Authorization = "Bearer " + token;
-  }
-  return config;
+const api = createStorefrontApi({
+  createClient,
+  env: import.meta.env,
 });
 
 export default api;

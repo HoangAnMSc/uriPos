@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../api/axiosClient";
 import { setToken, setPermissions, setRoles } from "../../auth/storage";
+import { ButtonContent } from "../../components/Loading/Loading";
+import { getApiErrorMessage } from "../../hooks/useApiResource";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -21,6 +24,7 @@ const Login = () => {
     }
 
     try {
+      setLoading(true);
       const res = await axiosClient.post("/login", { email, password });
 
       setToken(res.data.token);
@@ -29,7 +33,9 @@ const Login = () => {
 
       navigate("/dashboard", { replace: true });
     } catch (err) {
-      setError("Login failed. Check email and password.");
+      setError(getApiErrorMessage(err, "Login failed. Check email and password."));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +66,11 @@ const Login = () => {
 
         {error && <div className="login-popup-error">{error}</div>}
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          <ButtonContent loading={loading} loadingText="Logging in...">
+            Login
+          </ButtonContent>
+        </button>
 
         <div className="login-popup-condition">
           <input
